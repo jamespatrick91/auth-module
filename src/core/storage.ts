@@ -111,6 +111,8 @@ export default class Storage {
         preserveState: Boolean(this.ctx.store.state[this.options.vuex.namespace])
       })
 
+	  
+
       this.state = this.ctx.store.state[this.options.vuex.namespace]
     } else {
       Vue.set(this, 'state', {})
