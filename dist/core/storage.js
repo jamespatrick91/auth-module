@@ -80,6 +80,9 @@ export default class Storage {
             this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
                 preserveState: Boolean(this.ctx.store.state[this.options.vuex.namespace])
             });
+            if (this.options.vuex.namespace == 'auth' &&
+                !this.ctx.store.state[this.options.vuex.namespace].loggedIn)
+                debugger;
             this.state = this.ctx.store.state[this.options.vuex.namespace];
         }
         else {
