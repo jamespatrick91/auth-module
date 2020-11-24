@@ -282,7 +282,11 @@ export default class Auth {
     const tokenName = this.strategies[strategy].options.tokenName || 'Authorization'
     if (!_endpoint.headers) {
       _endpoint.headers = {}
-    }
+	}
+	
+	if (this.strategies[strategy].options.originAddress)
+			_endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
+
     if (!_endpoint.headers[tokenName] && isSet(token) && token) {
       _endpoint.headers[tokenName] = token
     }
