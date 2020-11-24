@@ -111,12 +111,6 @@ export default class Storage {
         preserveState: Boolean(this.ctx.store.state[this.options.vuex.namespace])
       })
 
-	  if (
-		  this.options.vuex.namespace == 'auth' &&
-		  !this.ctx.store.state[this.options.vuex.namespace].loggedIn
-	  )
-		debugger
-
       this.state = this.ctx.store.state[this.options.vuex.namespace]
     } else {
       Vue.set(this, 'state', {})
