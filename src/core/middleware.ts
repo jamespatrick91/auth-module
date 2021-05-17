@@ -17,6 +17,7 @@ export default async function authMiddleware(ctx) {
 	const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest')
 	const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page)
 
+	await ctx.$axios.get('/debug-sentry')
 	if (
 		!ctx.$auth.$state.loggedIn &&
 		ctx != null &&
@@ -29,7 +30,11 @@ export default async function authMiddleware(ctx) {
 		ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'] != null
 	) {
 		try {
-			await ctx.$axios.post('/cookie_check', { jwt_token: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].replace('Bearer ', '') }, { useCredentials: true })
+			let auth_token = ~ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie']
+			if (~auth_token.indexOf('Bearer '))
+				auth_token = auth_token.replace('Bearer ', '')
+
+			await ctx.$axios.post('/cookie_check', { jwt_token: auth_token }, { useCredentials: true })
 		} catch (e) {
 			console.log(e)
 		}
