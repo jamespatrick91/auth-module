@@ -20,7 +20,6 @@ export default async function authMiddleware (ctx) {
   if (ctx.$auth.$state.loggedIn) {
     // -- Authorized --
     if (!login || insidePage(login) || pageIsInGuestMode) {
-      console.log('test 1')
 		ctx.$auth.redirect('home')
     }
 
@@ -45,6 +44,8 @@ export default async function authMiddleware (ctx) {
     // (Those passing `callback` at runtime need to mark their callback component
     // with `auth: false` to avoid an unnecessary redirect from callback to login)
   } else if (!pageIsInGuestMode && (!callback || !insidePage(callback))) {
-    ctx.$auth.redirect('login')
+    console.log('test 3')
+	debugger
+	ctx.$auth.redirect('login')
   }
 }

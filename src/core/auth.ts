@@ -60,7 +60,6 @@ export default class Auth {
       if (process.client && this.options.watchLoggedIn) {
         this.$storage.watchState('loggedIn', (loggedIn) => {
           if (!routeOption(this.ctx.route, 'auth', false)) {
-			  console.log('test 2')
             this.redirect(loggedIn ? 'home' : 'logout')
           }
         })
@@ -142,6 +141,7 @@ export default class Auth {
 
     return this.wrapLogin(this.strategy.login(...args))
       .catch((error) => {
+		  console.log('test 1')
         this.callOnError(error, { method: 'login' })
         return Promise.reject(error)
       })
@@ -337,11 +337,12 @@ export default class Auth {
     // Apply rewrites
     if (this.options.rewriteRedirects) {
       if (name === 'login' && isRelativeURL(from) && !isSameURL(to, from)) {
-        this.$storage.setUniversal('redirect', from)
+		console.log('test 2')
+		debugger
+		this.$storage.setUniversal('redirect', from)
       }
 
       if (name === 'home') {
-		  console.log('test 3')
         const redirect = this.$storage.getUniversal('redirect')
         this.$storage.setUniversal('redirect', null)
 
@@ -366,7 +367,6 @@ export default class Auth {
         this.ctx.redirect(to, this.ctx.query)
       }
     } else {
-		console.log('test 4')
       this.ctx.redirect(to, this.ctx.query)
     }
   }
