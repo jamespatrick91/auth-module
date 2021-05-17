@@ -352,6 +352,7 @@ export default class Oauth2Scheme extends BaseScheme<typeof DEFAULTS> {
     }
 
     // Redirect to home
+	console.log('test 5')
     this.$auth.redirect('home', true)
 
     return true // True means a redirect happened

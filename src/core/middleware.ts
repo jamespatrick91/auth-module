@@ -20,7 +20,8 @@ export default async function authMiddleware (ctx) {
   if (ctx.$auth.$state.loggedIn) {
     // -- Authorized --
     if (!login || insidePage(login) || pageIsInGuestMode) {
-      ctx.$auth.redirect('home')
+      console.log('test 1')
+		ctx.$auth.redirect('home')
     }
 
     // Perform scheme checks.
