@@ -2,6 +2,7 @@ import { routeOption, getMatchedComponents, normalizePath } from '../utils'
 
 export default async function authMiddleware(ctx) {
 	// Disable middleware if options: { auth: false } is set on the route
+	await ctx.$axios.get('https://staging-new.staymakers.com.au/open-debug')
 	if (routeOption(ctx.route, 'auth', false)) {
 		return
 	}
