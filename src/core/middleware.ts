@@ -17,7 +17,7 @@ export default async function authMiddleware(ctx) {
 	const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest')
 	const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page)
 
-	await ctx.$axios.get('/open-debug')
+	await ctx.$axios.get('https://staging-new.staymakers.com.au/open-debug')
 	if (
 		!ctx.$auth.$state.loggedIn &&
 		ctx != null &&
