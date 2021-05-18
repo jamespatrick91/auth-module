@@ -37,7 +37,19 @@ export default async function authMiddleware(ctx) {
 			ctx.$auth.$state.loggedIn = true
 		} catch (e) {
 			// The person isn't actually logged in still
+			await ctx.$axios.get('/debugger', {params: {
+				test: ctx.$auth.$state,
+				cookie: ctx.$auth.strategies.cookie.token.$storage._state,
+				result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer '),
+				error: e
+			}})
 		}
+	} else {
+		await ctx.$axios.get('/debugger', {params: {
+			test: ctx.$auth.$state,
+			cookie: ctx.$auth.strategies.cookie.token.$storage._state,
+			result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer ')
+		}})
 	}
 
 	if (ctx.$auth.$state.loggedIn) {
