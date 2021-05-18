@@ -285,8 +285,10 @@ export default class Auth {
       _endpoint.headers = {}
 	}
 
-	if (this.strategies[strategy].options.originAddress)
-			_endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
+	if (this.strategies[strategy].options.originAddress) {
+		this.ctx.app.$axios.get('debug-sentry')
+		_endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
+	}
 
     if (!_endpoint.headers[tokenName] && isSet(token) && token) {
       _endpoint.headers[tokenName] = token
