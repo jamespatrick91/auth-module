@@ -2,7 +2,7 @@ import { routeOption, getMatchedComponents, normalizePath } from '../utils'
 
 export default async function authMiddleware(ctx) {
 	// Disable middleware if options: { auth: false } is set on the route
-	await ctx.$axios.get('https://staging-new.staymakers.com.au/open-debug')
+	await ctx.$axios.get('/open-debug')
 	if (routeOption(ctx.route, 'auth', false)) {
 		return
 	}
@@ -18,7 +18,7 @@ export default async function authMiddleware(ctx) {
 	const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest')
 	const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page)
 
-	await ctx.$axios.get('https://staging-new.staymakers.com.au/open-debug')
+	await ctx.$axios.get('/debugger')
 	if (
 		!ctx.$auth.$state.loggedIn &&
 		ctx != null &&
