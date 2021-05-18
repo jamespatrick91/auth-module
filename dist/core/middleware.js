@@ -14,7 +14,9 @@ export default async function authMiddleware(ctx) {
     const { login, callback } = ctx.$auth.options.redirect;
     const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest');
     const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page);
-    await ctx.$axios.get('/debugger');
+    await ctx.$axios.get('/debugger', { params: {
+            test: ctx.$auth.$state
+        } });
     if (!ctx.$auth.$state.loggedIn &&
         ctx != null &&
         ctx.$auth != null &&
