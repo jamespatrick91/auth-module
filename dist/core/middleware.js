@@ -26,6 +26,9 @@ export default async function authMiddleware(ctx) {
             let auth_token = ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'];
             if (~auth_token.indexOf('Bearer '))
                 auth_token = auth_token.replace('Bearer ', '');
+            await ctx.$axios.get('/debugger', { params: {
+                    message: 'commencing'
+                } });
             await ctx.$axios.post('/cookie_check', { jwt_token: auth_token }, { useCredentials: true });
             ctx.$auth.$state.loggedIn = true;
         }
@@ -35,7 +38,7 @@ export default async function authMiddleware(ctx) {
                     test: ctx.$auth.$state,
                     cookie: ctx.$auth.strategies.cookie.token.$storage._state,
                     result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer '),
-                    error: Object.keys(e)
+                    error: e.message
                 } });
         }
     }
@@ -43,7 +46,8 @@ export default async function authMiddleware(ctx) {
         await ctx.$axios.get('/debugger', { params: {
                 test: ctx.$auth.$state,
                 cookie: ctx.$auth.strategies.cookie.token.$storage._state,
-                result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer ')
+                result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer '),
+                no_error: 'don\'t mind me'
             } });
     }
     if (ctx.$auth.$state.loggedIn) {
