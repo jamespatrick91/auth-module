@@ -285,7 +285,6 @@ export default class Auth {
       _endpoint.headers = {}
 	}
 
-	this.ctx.app.$axios.get('debug-sentry')
 	if (this.strategies[strategy].options.originAddress) {
 		_endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
 	}
