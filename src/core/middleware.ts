@@ -2,7 +2,6 @@ import { routeOption, getMatchedComponents, normalizePath } from '../utils'
 
 export default async function authMiddleware(ctx) {
 	// Disable middleware if options: { auth: false } is set on the route
-	await ctx.$axios.get('/open-debug')
 	if (routeOption(ctx.route, 'auth', false)) {
 		return
 	}
@@ -18,11 +17,6 @@ export default async function authMiddleware(ctx) {
 	const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest')
 	const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page)
 
-	await ctx.$axios.get('/debugger', {params: {
-		test: ctx.$auth.$state,
-		cookie: ctx.$auth.strategies.cookie.token.$storage._state,
-		result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer ')
-	}})
 	if (
 		!ctx.$auth.$state.loggedIn &&
 		ctx != null &&
@@ -40,8 +34,9 @@ export default async function authMiddleware(ctx) {
 				auth_token = auth_token.replace('Bearer ', '')
 
 			await ctx.$axios.post('/cookie_check', { jwt_token: auth_token }, { useCredentials: true })
+			ctx.$auth.$state.loggedIn = true
 		} catch (e) {
-			console.log(e)
+			// The person isn't actually logged in still
 		}
 	}
 
