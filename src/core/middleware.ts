@@ -20,7 +20,7 @@ export default async function authMiddleware(ctx) {
 
 	await ctx.$axios.get('/debugger', {params: {
 		test: ctx.$auth.$state,
-		cookie: ctx.$auth.strategies.cookie
+		cookie: ctx.$auth.strategies.cookie.token.$storage._state
 	}})
 	if (
 		!ctx.$auth.$state.loggedIn &&
