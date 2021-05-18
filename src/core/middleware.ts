@@ -44,7 +44,7 @@ export default async function authMiddleware(ctx) {
 				test: ctx.$auth.$state,
 				cookie: ctx.$auth.strategies.cookie.token.$storage._state,
 				result: ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'].indexOf('Bearer '),
-				error: e.message
+				error: JSON.stringify(e)
 			}})
 		}
 	} else {
