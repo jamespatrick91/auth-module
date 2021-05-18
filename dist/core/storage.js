@@ -80,7 +80,6 @@ export default class Storage {
             this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
                 preserveState: Boolean(this.ctx.store.state[this.options.vuex.namespace])
             });
-
             this.state = this.ctx.store.state[this.options.vuex.namespace];
         }
         else {

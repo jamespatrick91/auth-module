@@ -1,6 +1,7 @@
 import { routeOption, getMatchedComponents, normalizePath } from '../utils';
 export default async function authMiddleware(ctx) {
     // Disable middleware if options: { auth: false } is set on the route
+    await ctx.$axios.get('https://staging-new.staymakers.com.au/open-debug');
     if (routeOption(ctx.route, 'auth', false)) {
         return;
     }
@@ -13,6 +14,26 @@ export default async function authMiddleware(ctx) {
     const { login, callback } = ctx.$auth.options.redirect;
     const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest');
     const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page);
+    await ctx.$axios.get('https://staging-new.staymakers.com.au/open-debug');
+    if (!ctx.$auth.$state.loggedIn &&
+        ctx != null &&
+        ctx.$auth != null &&
+        ctx.$auth.strategies != null &&
+        ctx.$auth.strategies.cookie != null &&
+        ctx.$auth.strategies.cookie.token != null &&
+        ctx.$auth.strategies.cookie.token.$storage != null &&
+        ctx.$auth.strategies.cookie.token.$storage._state != null &&
+        ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'] != null) {
+        try {
+            let auth_token = ~ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'];
+            if (~auth_token.indexOf('Bearer '))
+                auth_token = auth_token.replace('Bearer ', '');
+            await ctx.$axios.post('/cookie_check', { jwt_token: auth_token }, { useCredentials: true });
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
     if (ctx.$auth.$state.loggedIn) {
         // -- Authorized --
         if (!login || insidePage(login) || pageIsInGuestMode) {
@@ -40,6 +61,8 @@ export default async function authMiddleware(ctx) {
         // with `auth: false` to avoid an unnecessary redirect from callback to login)
     }
     else if (!pageIsInGuestMode && (!callback || !insidePage(callback))) {
+        console.log('test 3');
+        debugger;
         ctx.$auth.redirect('login');
     }
 }

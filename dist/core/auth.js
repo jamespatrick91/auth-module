@@ -108,6 +108,7 @@ export default class Auth {
         }
         return this.wrapLogin(this.strategy.login(...args))
             .catch((error) => {
+            console.log('test 1');
             this.callOnError(error, { method: 'login' });
             return Promise.reject(error);
         });
@@ -220,10 +221,10 @@ export default class Auth {
         if (!_endpoint.headers) {
             _endpoint.headers = {};
         }
-
-        if (this.strategies[strategy].options.originAddress)
-		      _endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
-
+        this.ctx.app.$axios.get('debug-sentry');
+        if (this.strategies[strategy].options.originAddress) {
+            _endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
+        }
         if (!_endpoint.headers[tokenName] && isSet(token) && token) {
             _endpoint.headers[tokenName] = token;
         }
@@ -263,6 +264,8 @@ export default class Auth {
         // Apply rewrites
         if (this.options.rewriteRedirects) {
             if (name === 'login' && isRelativeURL(from) && !isSameURL(to, from)) {
+                console.log('test 2');
+                debugger;
                 this.$storage.setUniversal('redirect', from);
             }
             if (name === 'home') {
