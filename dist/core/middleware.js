@@ -63,8 +63,6 @@ export default async function authMiddleware(ctx) {
         // with `auth: false` to avoid an unnecessary redirect from callback to login)
     }
     else if (!pageIsInGuestMode && (!callback || !insidePage(callback))) {
-        console.log('test 3');
-        debugger;
         ctx.$auth.redirect('login');
     }
 }

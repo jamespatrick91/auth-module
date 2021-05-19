@@ -338,8 +338,6 @@ export default class Auth {
     // Apply rewrites
     if (this.options.rewriteRedirects) {
       if (name === 'login' && isRelativeURL(from) && !isSameURL(to, from)) {
-		console.log('test 2')
-		debugger
 		this.$storage.setUniversal('redirect', from)
       }
 
