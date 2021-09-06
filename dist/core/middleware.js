@@ -13,6 +13,12 @@ export default async function authMiddleware(ctx) {
     const { login, callback } = ctx.$auth.options.redirect;
     const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest');
     const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page);
+    try {
+        await ctx.$axios.get('/maintenance_check');
+    }
+    catch (e) {
+        ctx.$auth.redirect('login');
+    }
     if (!ctx.$auth.$state.loggedIn &&
         ctx != null &&
         ctx.$auth != null &&
