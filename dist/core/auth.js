@@ -2,16 +2,7 @@ import { routeOption, isRelativeURL, isSet, isSameURL, getProp } from '../utils'
 import { parse as parseCookie } from 'cookie';
 import Storage from './storage';
 export default class Auth {
-    ctx;
-    options;
-    strategies = {};
-    error;
-    _errorListeners = [];
-    _redirectListeners = [];
-    _stateWarnShown;
-    _getStateWarnShown;
-    $storage;
-    $state;
+
     constructor(ctx, options) {
         this.ctx = ctx;
         this.options = options;

@@ -2,11 +2,6 @@ import Vue from 'vue';
 import { parse as parseCookie, serialize as serializeCookie } from 'cookie';
 import { isUnset, isSet, decodeValue, encodeValue, getProp } from '../utils';
 export default class Storage {
-    ctx;
-    options;
-    state;
-    _state;
-    _useVuex;
     constructor(ctx, options) {
         this.ctx = ctx;
         this.options = options;
