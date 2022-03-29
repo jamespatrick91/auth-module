@@ -2,6 +2,8 @@ import jwtDecode, { InvalidTokenError } from 'jwt-decode';
 import { addTokenPrefix } from '../utils';
 import TokenStatus from './token-status';
 export default class RefreshToken {
+    scheme;
+    $storage;
     constructor(scheme, storage) {
         this.scheme = scheme;
         this.$storage = storage;

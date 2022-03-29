@@ -1,4 +1,5 @@
 import { routeOption, isRelativeURL, isSet, isSameURL, getProp } from '../utils'
+import { parse as parseCookie, serialize as serializeCookie } from 'cookie';
 import type { AuthOptions, HTTPRequest, HTTPResponse } from '../'
 import Storage from './storage'
 
@@ -264,18 +265,33 @@ export default class Auth {
       return
     }
 
+	let cookies = this.getCookies()
+	if (
+		cookies.activeUserEmail != null &&
+		_endpoint.data != null &&
+		_endpoint.data.variables.user_call == true
+	)
+		_endpoint.data.variables.where.email = cookies.activeUserEmail
+
+	if (
+		cookies.idToken != null &&
+		cookies.accessToken != null &&
+		cookies.refreshToken != null
+	) {
+		_endpoint.headers['Authorization'] = `Bearer ${cookies.accessToken}`
+		_endpoint.headers['CogId'] = cookies.idToken
+		_endpoint.headers['CogRefresh'] = cookies.refreshToken
+	}
+
     return this.ctx.app.$axios
       .request(_endpoint)
       .catch((error) => {
-        // Call all error handlers
-        this.callOnError(error, { method: 'request' })
-
-        // Throw error
-        return Promise.reject(error)
+        this.reset()
+		this.redirect('login')
       })
   }
 
-  requestWith (strategy: string, endpoint: HTTPRequest, defaults?: HTTPRequest): Promise<HTTPResponse> {
+  async requestWith (strategy: string, endpoint: HTTPRequest, defaults?: HTTPRequest): Promise<HTTPResponse> {
     const token = this.strategy.token.get()
 
     const _endpoint = Object.assign({}, defaults, endpoint)
@@ -285,15 +301,16 @@ export default class Auth {
       _endpoint.headers = {}
 	}
 
-	if (this.strategies[strategy].options.originAddress) {
-		_endpoint.headers['Origin'] = this.strategies[strategy].options.originAddress;
-	}
+	if (this.strategies[strategy].options.apiKey)
+		_endpoint.headers['x-api-key'] = this.strategies[strategy].options.apiKey
 
     if (!_endpoint.headers[tokenName] && isSet(token) && token) {
       _endpoint.headers[tokenName] = token
     }
 
-    return this.request(_endpoint)
+    let response = await this.request(_endpoint)
+
+	return {data: {data: response.data.data.admin[0]}};
   }
 
   wrapLogin (promise) {
@@ -394,4 +411,11 @@ export default class Auth {
 
     return Boolean(getProp(userScopes, scope))
   }
+
+  getCookies() {
+	const cookieStr = process.client
+		? document.cookie
+		: this.ctx.req.headers.cookie;
+	return parseCookie(cookieStr || '') || {};
+}
 }

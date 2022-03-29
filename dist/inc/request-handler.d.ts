@@ -6,7 +6,7 @@ export default class RequestHandler {
     interceptor: any;
     constructor(scheme: any, axios: any);
     _needToken(config: HTTPRequest): any;
-    _getUpdatedRequestConfig(config: HTTPRequest, token: any): any;
+    _getUpdatedRequestConfig(config: HTTPRequest, token: any): HTTPRequest;
     _requestHasAuthorizationHeader(config: HTTPRequest): boolean;
     setHeader(token: any): void;
     clearHeader(): void;

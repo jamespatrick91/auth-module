@@ -13,39 +13,18 @@ export default async function authMiddleware(ctx) {
     const { login, callback } = ctx.$auth.options.redirect;
     const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest');
     const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page);
-    let maintenance_mode = false;
-    try {
-        await ctx.$axios.get('/maintenance_check', { useCredentials: true, headers: { Origin: ctx.$auth.strategies.cookie.options.originAddress } });
-    }
-    catch (e) {
-        await ctx.$axios.get('/debugger', { params: {
-                error: e.message
-            } });
-        maintenance_mode = true;
-    }
-	if (!ctx.$auth.$state.loggedIn &&
-		ctx != null &&
-		ctx.$auth != null &&
-		ctx.$auth.strategies != null &&
-		ctx.$auth.strategies.cookie != null &&
-		ctx.$auth.strategies.cookie.token != null &&
-		ctx.$auth.strategies.cookie.token.$storage != null &&
-		ctx.$auth.strategies.cookie.token.$storage._state != null &&
-		ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'] != null) {
-		try {
-			let auth_token = ctx.$auth.strategies.cookie.token.$storage._state['_token.cookie'];
-			if (~auth_token.indexOf('Bearer '))
-				auth_token = auth_token.replace('Bearer ', '');
-			await ctx.$axios.$post('/cookie_check', { jwt_token: auth_token }, { useCredentials: true, headers: { Origin: ctx.$auth.strategies.cookie.options.originAddress } });
-			ctx.$auth.$state.loggedIn = true;
+	let query = await ctx.$axios.post('/', {
+		query: 'query Settings($id: Int) { settingsSingle(id: $id) { maintenance_mode_active }}',
+		variables: {
+			id: 1
 		}
-		catch (e) {
-			// The person isn't actually logged in still
-			await ctx.$axios.get('/debugger', { params: {
-					error: e
-				} });
+	}, {
+		headers: {
+			'x-api-key': ctx.$auth.strategies.cookie.options.apiKey
 		}
-	}
+	})
+
+	let maintenance_mode = query.data.data.settingsSingle.maintenance_mode_active
 
 	if (
 		!maintenance_mode ||
@@ -54,10 +33,6 @@ export default async function authMiddleware(ctx) {
 			ctx.route.name == 'oauth-token'
 		)
 	) {
-		console.log({
-			path: ctx.route.path,
-			loggedIn: ctx.$auth.$state.loggedIn,
-		})
         if (ctx.$auth.$state.loggedIn) {
             // -- Authorized --
             if (!login || insidePage(login) || pageIsInGuestMode) {

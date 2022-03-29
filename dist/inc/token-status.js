@@ -5,6 +5,7 @@ export var TokenStatusEnum;
     TokenStatusEnum["EXPIRED"] = "EXPIRED";
 })(TokenStatusEnum || (TokenStatusEnum = {}));
 export default class TokenStatus {
+    _status;
     constructor(token, tokenExpiresAt) {
         this._status = this._calculate(token, tokenExpiresAt);
     }

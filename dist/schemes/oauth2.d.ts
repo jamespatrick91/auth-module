@@ -56,7 +56,7 @@ export default class Oauth2Scheme extends BaseScheme<typeof DEFAULTS> {
     mounted(): unknown;
     reset(): void;
     _generateRandomString(): any;
-    _sha256(plain: any): any;
+    _sha256(plain: any): Promise<ArrayBuffer>;
     _base64UrlEncode(str: any): any;
     _pkceChallengeFromVerifier(v: any, hashValue: any): unknown;
     login(_opts?: {

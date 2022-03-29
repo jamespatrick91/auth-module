@@ -1,5 +1,8 @@
 import ExpiredAuthSessionError from './expired-auth-session-error';
 export default class RequestHandler {
+    scheme;
+    axios;
+    interceptor;
     constructor(scheme, axios) {
         this.scheme = scheme;
         this.axios = axios;
