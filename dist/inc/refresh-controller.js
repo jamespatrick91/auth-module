@@ -1,7 +1,4 @@
 export default class RefreshController {
-    scheme;
-    $auth;
-    _refreshPromise = null;
     constructor(scheme) {
         this.scheme = scheme;
         this.$auth = scheme.$auth;

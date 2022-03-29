@@ -37,8 +37,6 @@ const DEFAULTS = {
     scope: false
 };
 export default class LocalScheme extends BaseScheme {
-    token;
-    requestHandler;
     constructor($auth, options, ...defaults) {
         super($auth, options, ...defaults, DEFAULTS);
         // Initialize Token instance
