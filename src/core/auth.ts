@@ -26,6 +26,9 @@ export default class Auth {
     const storage = new Storage(ctx, options)
     this.$storage = storage
     this.$state = storage.state
+	this.strategies = {}
+	this._redirectListeners = []
+	this._errorListeners = []
   }
 
   async init () {
