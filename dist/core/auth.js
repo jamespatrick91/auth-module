@@ -222,6 +222,7 @@ export default class Auth {
         }
 
 		console.log('running tests')
+		console.log(_endpoint.headers)
         return this.ctx.app.$axios
             .request(_endpoint)
             .catch((error) => {
