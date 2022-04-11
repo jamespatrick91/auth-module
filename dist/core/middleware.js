@@ -20,7 +20,7 @@ export default async function authMiddleware(ctx) {
         }
     }, {
         headers: {
-            'x-api-key': ctx.$auth.strategies.cookie.options.apiKey
+            'x-api-key': ctx.$config.API_KEY
         }
     });
     let maintenance_mode = query.data.data.settingsSingle.maintenance_mode_active;
