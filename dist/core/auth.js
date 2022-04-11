@@ -234,7 +234,9 @@ export default class Auth {
             _endpoint.headers = {};
         }
 
-		console.log(this.strategies[strategy].options)
+		console.log('Process Env: ', process.env)
+		console.log('Strategies: ',this.strategies)
+		console.log('Check: ', this.strategies[strategy].options.apiKey)
         if (this.strategies[strategy].options.apiKey)
             _endpoint.headers['x-api-key'] = this.strategies[strategy].options.apiKey;
         if (!_endpoint.headers[tokenName] && isSet(token) && token) {
