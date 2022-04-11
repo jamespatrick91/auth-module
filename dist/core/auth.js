@@ -222,6 +222,8 @@ export default class Auth {
         return this.ctx.app.$axios
             .request(_endpoint)
             .catch((error) => {
+				console.log(error)
+				console.log(_endpoint)
             this.reset();
             this.redirect('login');
         });
