@@ -46,7 +46,6 @@ export default class Auth {
             if (process.client && this.options.watchLoggedIn) {
                 this.$storage.watchState('loggedIn', (loggedIn) => {
                     if (!routeOption(this.ctx.route, 'auth', false)) {
-						console.log('some strange redirect')
                         this.redirect(loggedIn ? 'home' : 'logout');
                     }
                 });
@@ -111,7 +110,6 @@ export default class Auth {
         }
         return this.wrapLogin(this.strategy.login(...args))
             .catch((error) => {
-				console.log('login redirect')
             this.callOnError(error, { method: 'login' });
             return Promise.reject(error);
         });
@@ -221,14 +219,9 @@ export default class Auth {
             _endpoint.headers['CogRefresh'] = cookies.refreshToken;
         }
 
-		console.log('running tests')
-		console.log(_endpoint.headers)
         return this.ctx.app.$axios
             .request(_endpoint)
             .catch((error) => {
-				console.log('request redirect')
-				console.log(error)
-				console.log(_endpoint)
             this.reset();
             this.redirect('login');
         });
@@ -299,7 +292,6 @@ export default class Auth {
         if (isSameURL(to, from)) {
             return;
         }
-		console.log('test 2')
         if (process.client) {
             if (noRouter) {
                 window.location.replace(to);
@@ -309,7 +301,6 @@ export default class Auth {
             }
         }
         else {
-			console.log('test 1')
             this.ctx.redirect(to, this.ctx.query);
         }
     }
