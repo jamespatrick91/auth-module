@@ -14,16 +14,15 @@ export default async function authMiddleware(ctx) {
     const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest');
     const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page);
     let query = await ctx.$axios.post('/', {
-        query: 'query Settings($id: Int) { settingsSingle(id: $id) { maintenance_mode_active }}',
+        query: 'query AgentsSingle($where: SequelizeJSON) { agents(where: $where) { settings { maintenance_mode_active }}}',
         variables: {
-            id: 1
+            where: {
+				api_key: ctx.$config.API_KEY
+			}
         }
-    }, {
-        headers: {
-            'x-api-key': ctx.$config.API_KEY
-        }
-    });
-    let maintenance_mode = query.data.data.settingsSingle.maintenance_mode_active;
+    }, {headers: {'x-api-key': ctx.$config.API_KEY}});
+
+	let maintenance_mode = query.data.data.agents[0].settings[0].maintenance_mode_active;
     if (!maintenance_mode ||
         (maintenance_mode &&
             ctx.route.name == 'oauth-token')) {
