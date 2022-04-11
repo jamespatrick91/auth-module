@@ -1,4 +1,14 @@
 import { routeOption, getMatchedComponents, normalizePath } from '../utils';
+import { CognitoAccessToken, CognitoIdToken, CognitoRefreshToken, CognitoUserSession } from 'amazon-cognito-identity-js';
+import { parse as parseCookie } from 'cookie';
+
+function getCookies(ctx) {
+	const cookieStr = process.client
+		? document.cookie
+		: ctx.req.headers.cookie;
+	return parseCookie(cookieStr || '') || {};
+}
+
 export default async function authMiddleware(ctx) {
     // Disable middleware if options: { auth: false } is set on the route
     if (routeOption(ctx.route, 'auth', false)) {
@@ -10,6 +20,29 @@ export default async function authMiddleware(ctx) {
     if (!Components.length) {
         return;
     }
+
+	let cookies = getCookies(ctx);
+
+	if (
+		'accessToken' in cookies &&
+		'idToken' in cookies &&
+		'refreshToken' in cookies
+	) {
+		// Check with Cognito
+
+		let access = new CognitoAccessToken({ AccessToken: cookies['accessToken'] })
+		let id = new CognitoIdToken({ IdToken: cookies['idToken'] })
+		let refresh = new CognitoRefreshToken({ RefreshToken: cookies['refreshToken'] })
+
+		let session = new CognitoUserSession({
+			AccessToken: access,
+			IdToken: id,
+			RefreshToken: refresh
+		})
+
+		ctx.$auth.$state.loggedIn = session.isValid()
+	}
+
     const { login, callback } = ctx.$auth.options.redirect;
     const pageIsInGuestMode = routeOption(ctx.route, 'auth', 'guest');
     const insidePage = page => normalizePath(ctx.route.path) === normalizePath(page);
