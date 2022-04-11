@@ -220,6 +220,8 @@ export default class Auth {
             _endpoint.headers['CogId'] = cookies.idToken;
             _endpoint.headers['CogRefresh'] = cookies.refreshToken;
         }
+
+		console.log('running tests')
         return this.ctx.app.$axios
             .request(_endpoint)
             .catch((error) => {
