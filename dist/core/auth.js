@@ -110,7 +110,6 @@ export default class Auth {
         }
         return this.wrapLogin(this.strategy.login(...args))
             .catch((error) => {
-            console.log('test 1');
             this.callOnError(error, { method: 'login' });
             return Promise.reject(error);
         });
