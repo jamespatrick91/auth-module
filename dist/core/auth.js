@@ -240,6 +240,12 @@ export default class Auth {
             _endpoint.headers[tokenName] = token;
         }
         let response = await this.request(_endpoint);
+
+		if (response.data.error != null) {
+			this.redirect('login')
+			return {data: {data: false}}
+		}
+
         return { data: { data: response.data.data.admin[0] } };
     }
     wrapLogin(promise) {

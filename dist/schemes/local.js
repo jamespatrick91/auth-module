@@ -143,9 +143,7 @@ export default class LocalScheme extends BaseScheme {
         }
         // Try to fetch user and then set
         return this.$auth.requestWith(this.name, endpoint, this.options.endpoints.user).then((response) => {
-            console.log('Response: ',response)
-			console.log('Options: ',this.options.user)
-			this.$auth.setUser(getResponseProp(response, this.options.user.property));
+            this.$auth.setUser(getResponseProp(response, this.options.user.property));
             return response;
         }).catch((error) => {
             this.$auth.callOnError(error, { method: 'fetchUser' });
