@@ -37,12 +37,19 @@ export default class Token {
         return this._setExpiration(tokenExpiration || false);
     }
     _setToken(token) {
-        const _key = this.scheme.options.token.prefix + this.scheme.name;
-        return this.$storage.setUniversal(_key, token);
-    }
+		const _key = this.scheme.options.token.prefix + this.scheme.name;
+		return this.$storage.setUniversal(_key, token);
+	}
     _syncToken() {
-        const _key = this.scheme.options.token.prefix + this.scheme.name;
-        return this.$storage.syncUniversal(_key);
+		if ('names' in this.scheme.options) {
+			for (let i in this.scheme.options.names) {
+				const sub_key = this.scheme.options.names[i];
+				this.$storage.syncUniversal(sub_key);
+			}
+		}
+
+		const _key = this.scheme.options.token.prefix + this.scheme.name;
+		return this.$storage.syncUniversal(_key);
     }
     get() {
         const _key = this.scheme.options.token.prefix + this.scheme.name;

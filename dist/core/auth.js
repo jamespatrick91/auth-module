@@ -7,7 +7,7 @@ export default class Auth {
         this.ctx = ctx;
         this.options = options;
         // Storage & State
-        options.initialState = { user: null, loggedIn: false };
+        options.initialState = { user: null, loggedIn: false, _accessToken: null, _refreshToken: null, _idToken: null };
         const storage = new Storage(ctx, options);
         this.$storage = storage;
         this.$state = storage.state;

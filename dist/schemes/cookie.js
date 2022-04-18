@@ -1,6 +1,7 @@
 import LocalScheme from './local';
 const DEFAULTS = {
     name: 'cookie',
+	names: [],
     cookie: {
         name: null
     },
