@@ -17,7 +17,7 @@ export default async function authMiddleware(ctx) {
         await ctx.$axios.get('/maintenance_check', {headers: {Origin: ctx.$auth.strategies.cookie.options.originAddress}});
     }
     catch (e) {
-        ctx.$auth.redirect('login');
+        // ctx.$auth.redirect('login');
     }
     if (!ctx.$auth.$state.loggedIn &&
         ctx != null &&
